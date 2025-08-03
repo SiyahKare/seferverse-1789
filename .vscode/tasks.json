@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "✅ Task 1: Health Endpoint",
+      "type": "shell",
+      "command": "echo 'Check: /health endpoint oluşturuldu mu?'"
+    },
+    {
+      "label": "✅ Task 2: Deployments Endpoint",
+      "type": "shell",
+      "command": "echo 'Check: /deployments endpoint JSON döndürüyor mu?'"
+    },
+    {
+      "label": "✅ Task 3: .env & Log Sync",
+      "type": "shell",
+      "command": "echo 'Check: Server start log ve .env example hazır mı?'"
+    },
+    {
+      "label": "✅ Task 4: Docker Test",
+      "type": "shell",
+      "command": "echo 'Check: Docker build & run backend successful?'"
+    },
+    {
+      "label": "✅ Task 5: Commit & Push",
+      "type": "shell",
+      "command": "echo 'Check: Sprint 2 backend ready commit pushlandı mı?'"
+    }
+  ]
+}

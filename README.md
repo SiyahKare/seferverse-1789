@@ -134,3 +134,11 @@ uvicorn app.main:app --reload
 * **Unutma:** Push'lamadan önce .env ve özel anahtarlarını public etme; Baron seni izliyor olabilir.
 
 ---
+
+### 🏁 Sprint 2 Backend Checklist
+
+- [ ] `/health` endpoint hazır
+- [ ] `/deployments` endpoint JSON döndürüyor
+- [ ] `.env.example` ve log sistemi hazır
+- [ ] Docker build & run successful
+- [ ] Commit & push → Sprint 2 backend ready
