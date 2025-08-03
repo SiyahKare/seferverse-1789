@@ -1,0 +1,29 @@
+{
+  "baseSepolia": {
+    "MyContract": {
+      "address": "0x93338B46B297Ebef08ADa701335b17D36BEAE16A",
+      "txHash": "0x4c6e99b0549763473adf95de7debede8a551833aa1fb7bdf18824ca403e48222",
+      "args": [],
+      "gasUsed": "0.000000494973597184 ETH",
+      "date": "2025-08-03T16:25:03.553Z"
+    },
+    "SeferVerse": {
+      "address": "0xcCb557C0BFd746Fde89EdDF1d753cBA7Ac7abcFA",
+      "txHash": "0x2bff605b9010b8ee100a06b74ef6ab35d08ac5bfd2d6e99ad0e586abaa3bcd9c",
+      "args": [
+        "SeferVerse"
+      ],
+      "gasUsed": "0.000000274853841306 ETH",
+      "date": "2025-08-03T16:33:49.758Z"
+    },
+    "SeferVerseDAO": {
+      "address": "0xd86D83a10291ACf4CF4290dad96835dadD40379F",
+      "txHash": "0xe4f032c33b1c21ecd0661c0b98697cf2e79d7caac51ac80583143df3e16a19be",
+      "args": [
+        "SeferVerse_DAO"
+      ],
+      "gasUsed": "0.00000082205134224 ETH",
+      "date": "2025-08-03T17:00:17.937Z"
+    }
+  }
+}

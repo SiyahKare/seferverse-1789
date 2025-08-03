@@ -2,6 +2,7 @@
 
 > **Web3 + NFT + Token + Müzik + Tribe = Global Kültür Devrimi**  
 > Rugcılardan tahsilat, hayallerin refund'u ve kültürel adalet!
+> **by: Onur Mutlu & Taylan Transport Kft.** (ve bir grup asi hayalperest)
 
 ---
 
@@ -10,10 +11,10 @@
 **SeferVerse 1789**, sadece bir blockchain projesi değil;  
 **global bir kültür, müzik ve NFT devrimi.**
 
-- **Token & NFT:** Base L2 üzerinde **BaronToken (BRT)** ve **Baron Trilogy Audio NFT**  
-- **MiniApp & dApp:** Tribe için hızlı erişim ve mint/refund ekranları  
-- **Actor.Coach entegrasyonu:** Hayalini kanıtla → Refund → Kültür Coin  
-- **Global hedef:** **1789 ETH Hard Cap**  
+- **Token & NFT:** Base L2 üzerinde **BaronToken (BRT)** ve **Baron Trilogy Audio NFT**
+- **MiniApp & dApp:** Tribe için hızlı erişim ve mint/refund ekranları
+- **Actor.Coach entegrasyonu:** Hayalini kanıtla → Refund → Kültür Coin
+- **Global hedef:** **1789 ETH Hard Cap**
 - **Slogan:** *“Hayalini anlat, hakkını al – Rugcıdan tahsilat, barona iade!”*
 
 ---
@@ -44,6 +45,7 @@ seferverse-1789/
 ## ⚡ Başlangıç Adımları
 
 ### 1️⃣ Repo Kopyala & Aç
+
 ```bash
 git clone <repo-url>
 cd seferverse-1789
@@ -78,6 +80,15 @@ uvicorn app.main:app --reload
 
 ---
 
+## 🏁 **Sprint 1: Blockchain Pipeline Başarıyla Tamamlandı!**
+
+* **Hardhat deploy pipeline**: arg parser, verify, deployments.json/log, .env sync, debug logging (V7)
+* **SeferVerseDAO.sol**: testnet (Base Sepolia) verified deploy
+* **Otomasyon**: Tüm env, log ve JSON dosyaları tek script ile güncelleniyor
+* **Hazır**: Bir sonraki adımda backend ve frontend otomatik kontrat sync başlayacak
+
+---
+
 ## 🎯 Yol Haritası (CTO Perspektifi)
 
 1. **Token Deploy (BaronToken ERC20)**
@@ -86,6 +97,9 @@ uvicorn app.main:app --reload
 4. **Refund Mekanizması & Actor.Coach entegrasyonu**
 5. **Soft/Mid/Hard Cap milestone’ları & global lansman**
 6. **VR Concert + NFT Wave 3 + 1789 ETH hard cap**
+
+> Detaylı roadmap için: [ROADMAP.md](./ROADMAP.md)
+> Tüm teknik değişiklikler için: [CHANGELOG.md](./CHANGELOG.md)
 
 ---
 
@@ -110,3 +124,13 @@ uvicorn app.main:app --reload
 * **“Hayalini anlat, hakkını al.”**
 * **“Rugcıdan tahsilat, barona iade.”**
 * **“1789 ETH → Global Baron Devrimi!”**
+
+---
+
+### 🦾 Notlar & Mizah
+
+* **Not:** Bu repo bir hayalin, bir devrimin ve biraz da deliliğin ürünüdür.
+* **Lütfen:** Rug yapmayın, hayal çalmayın, refund isteyene küfür etmeyin.
+* **Unutma:** Push'lamadan önce .env ve özel anahtarlarını public etme; Baron seni izliyor olabilir.
+
+---

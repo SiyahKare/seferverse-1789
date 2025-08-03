@@ -36,6 +36,78 @@
       "artifacts": [
         "MyContract"
       ]
+    },
+    "/Users/onur/code/seferverse-1789/seferverse-blockchain/contracts/SeferVerse.sol": {
+      "lastModificationDate": 1754237876426,
+      "contentHash": "e6f7baf1956044e2441a0e7cba402228",
+      "sourceName": "contracts/SeferVerse.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SeferVerse"
+      ]
+    },
+    "/Users/onur/code/seferverse-1789/seferverse-blockchain/contracts/SeferVerseDAO.sol": {
+      "lastModificationDate": 1754238973632,
+      "contentHash": "bc3aba8b308f1497787cbec0c1b28525",
+      "sourceName": "contracts/SeferVerseDAO.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "SeferVerseDAO"
+      ]
     }
   }
 }
