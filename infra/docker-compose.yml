@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./seferverse-dapp/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./seferverse-blockchain:/app/seferverse-blockchain:ro
+    env_file:
+      - ./seferverse-dapp/backend/.env
+    environment:
+      - DEPLOYMENTS_PATH=/app/seferverse-blockchain/deployments.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
