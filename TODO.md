@@ -40,6 +40,15 @@
 ### 5. README/Docs Update [PRIORITY: ALWAYS]
 - Eklenen tüm scriptlerin dokümantasyonunu kısa ve net şekilde README veya /docs altına ekle.
 
+### 6. Localhost Deploy & Orkestrasyon [PRIORITY: HIGH]
+- Hardhat `localhost` ağı default; compose’daki `hardhat-deploy` servisi bunu kullanır.
+- `Makefile` komutları ile tek tık local deploy ve log takibi.
+- Deploy özeti terminal çıktısı standardize edildi.
+
+### 7. Frontend Live Refresh [PRIORITY: MEDIUM]
+- `deployments.json` değişiminde frontend’in otomatik yenilenmesi (SSE/polling)
+- Basit polling ile başlayıp, backend’ten `ETag`/`Last-Modified` ile optimize et.
+
 ---
 
 ## [GENEL NOTLAR]

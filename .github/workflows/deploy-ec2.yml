@@ -1,0 +1,46 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STREAM_TOKEN: ${{ secrets.STREAM_TOKEN }}
+          ALLOWED_ORIGINS: ${{ secrets.ALLOWED_ORIGINS }}
+          NEXT_PUBLIC_EXPLORER_BASE: ${{ secrets.NEXT_PUBLIC_EXPLORER_BASE }}
+          PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          BASESCAN_API_KEY: ${{ secrets.BASESCAN_API_KEY }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT || 22 }}
+          envs: GITHUB_REPO,GITHUB_TOKEN,STREAM_TOKEN,ALLOWED_ORIGINS,NEXT_PUBLIC_EXPLORER_BASE,PRIVATE_KEY,BASESCAN_API_KEY
+          script: |
+            set -euo pipefail
+            REPO_DIR=/opt/seferverse-1789
+            if [ ! -d "$REPO_DIR/.git" ]; then
+              sudo mkdir -p "$REPO_DIR"
+              sudo chown -R "$USER":"$USER" "$REPO_DIR"
+              git clone "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git" "$REPO_DIR"
+            fi
+            cd "$REPO_DIR"
+            git fetch --all --prune
+            git checkout main
+            git pull --ff-only
+            export STREAM_TOKEN="$STREAM_TOKEN"
+            export ALLOWED_ORIGINS="$ALLOWED_ORIGINS"
+            export NEXT_PUBLIC_EXPLORER_BASE="$NEXT_PUBLIC_EXPLORER_BASE"
+            export PRIVATE_KEY="$PRIVATE_KEY"
+            export BASESCAN_API_KEY="$BASESCAN_API_KEY"
+            bash infra/scripts/deploy.sh
+

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/onur/code/seferverse-1789/seferverse-blockchain/contracts/MyContract.sol": {
+    "/workspace/contracts/MyContract.sol": {
       "lastModificationDate": 1754231211752,
       "contentHash": "b2ec94649e3aa9d0f113245873a09437",
       "sourceName": "contracts/MyContract.sol",
@@ -37,7 +37,7 @@
         "MyContract"
       ]
     },
-    "/Users/onur/code/seferverse-1789/seferverse-blockchain/contracts/SeferVerse.sol": {
+    "/workspace/contracts/SeferVerse.sol": {
       "lastModificationDate": 1754237876426,
       "contentHash": "e6f7baf1956044e2441a0e7cba402228",
       "sourceName": "contracts/SeferVerse.sol",
@@ -73,7 +73,7 @@
         "SeferVerse"
       ]
     },
-    "/Users/onur/code/seferverse-1789/seferverse-blockchain/contracts/SeferVerseDAO.sol": {
+    "/workspace/contracts/SeferVerseDAO.sol": {
       "lastModificationDate": 1754238973632,
       "contentHash": "bc3aba8b308f1497787cbec0c1b28525",
       "sourceName": "contracts/SeferVerseDAO.sol",

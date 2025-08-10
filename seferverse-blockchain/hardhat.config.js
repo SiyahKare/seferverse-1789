@@ -1,11 +1,15 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
-const { PRIVATE_KEY, BASESCAN_API_KEY } = process.env;
+const { PRIVATE_KEY, BASESCAN_API_KEY, HARDHAT_RPC_URL } = process.env;
 
 module.exports = {
   solidity: "0.8.20",
   networks: {
+    localhost: {
+      url: HARDHAT_RPC_URL || "http://127.0.0.1:8545",
+      // accounts: Hardhat local node provides unlocked accounts; no need to specify
+    },
     base: {
       url: "https://mainnet.base.org",
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : []

@@ -80,6 +80,49 @@ uvicorn app.main:app --reload
 
 ---
 
+## 🧪 Test, CI ve Docker Orkestrasyonu
+
+- Frontend test: `cd seferverse-dapp/frontend && npm run test`
+- Backend test: `cd seferverse-dapp/backend && python -m venv .venv && source .venv/bin/activate && pytest`
+- CI: `.github/workflows/ci.yml` backend (pytest), frontend (lint/test/build) ve Hardhat compile’ı koşar.
+
+### Docker ile Çalıştırma (Tek Komut)
+
+- Uygulama (backend + frontend):
+  - `make up` veya `cd infra && docker compose up -d`
+- Uygulama + Yerel Hardhat node + Otomatik deploy:
+  - `make up-deploy` veya `cd infra && docker compose --profile deploy up -d`
+
+Servisler:
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:8000/health`
+- Hardhat RPC: `http://localhost:8545`
+ - Nginx (reverse proxy): `http://localhost/` (frontend) ve `/api/*` (backend)
+
+Ortam değişkenleri:
+- Frontend: `NEXT_PUBLIC_BACKEND_URL`, `NEXT_PUBLIC_EXPLORER_BASE`
+- Backend: `DEPLOYMENTS_PATH` (compose’da otomatik set)
+- Blockchain: `PRIVATE_KEY`, `BASESCAN_API_KEY` (testnet/mainnet deploy için)
+ - Canlı akış güvenlik (opsiyonel): `STREAM_TOKEN`, `ALLOWED_ORIGINS`
+
+### Makefile Kısayolları
+- `make up`, `make up-deploy`, `make down`
+- `make logs` (tümü) / `make backend-logs` / `make frontend-logs` / `make hh-logs`
+- `make deploy-local` (localhost ağına manuel deploy)
+
+---
+
+## 🔴 SSE (Server-Sent Events) – Canlı Akış
+
+- Endpoint: `GET /deployments/stream`
+- İçerik: İlk bağlantıda `type=full` snapshot; daha sonra `type=added|updated|removed|noop` event’leri.
+- Keep-alive: Periyodik `: ping` satırları ve `retry: 3000` ile yeniden bağlanma süresi tavsiyesi.
+- Güvenlik (opsiyonel):
+  - Token: `STREAM_TOKEN` (backend env). Frontend `NEXT_PUBLIC_STREAM_TOKEN` ile query param’da gönderir.
+  - Origin: `ALLOWED_ORIGINS` (virgülle ayrık; ör: `http://localhost:3000,https://app.example.com`).
+- Frontend entegrasyonu: `connectDeploymentsSSE(onData)`; diff’ler incremental işlenir, grid otomatik güncellenir.
+
+
 ## 🏁 **Sprint 1: Blockchain Pipeline Başarıyla Tamamlandı!**
 
 * **Hardhat deploy pipeline**: arg parser, verify, deployments.json/log, .env sync, debug logging (V7)

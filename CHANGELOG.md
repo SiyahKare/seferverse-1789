@@ -6,6 +6,29 @@
 
 ---
 
+## [v0.8.0] - 2025-08-10
+### Added
+- Frontend Dockerfile (Next.js standalone) ve compose entegrasyonu
+- Backend Dockerfile iyileştirmesi (uvicorn run modu güncellendi)
+- Docker Compose: backend, frontend, hardhat-node, opsiyonel hardhat-deploy (profile)
+- Frontend: `utils/format.ts` altında `getExplorerTxUrl`/`getExplorerAddressUrl` + env override
+- Frontend: `lib/api.ts` backend URL env desteği ve `hashDeployments` helper
+- Frontend: komponentlerde explorer linkleri ve adres linkleri standardize edildi
+- Testler: Frontend Vitest, Backend pytest; CI pipeline eklendi
+- Makefile: up, up-deploy, logs, deploy-local kısayolları
+- Backend SSE: `/deployments/stream` ile canlı yayın (keep-alive + full snapshot)
+- SSE güvenlik: opsiyonel `STREAM_TOKEN` token ve `ALLOWED_ORIGINS` origin kontrolü
+- SSE diff event’leri: `added` / `updated` / `removed` / `noop` tipleri
+- Frontend: SSE aboneliği ve diff’leri işleyen canlı UI güncellemesi
+
+### Changed
+- Deploy script (EIP-1559): `effectiveGasPrice` ile gas hesabı
+- Backend `/deployments` varsayılan yolu repo kökünden mutlak hesaplanıyor
+- Frontend’te kopya dosyalar ve config çakışmaları temizlendi
+ - CI: Frontend build’e `NEXT_PUBLIC_STREAM_TOKEN` env eklendi
+
+---
+
 ## [v0.7.0] - 2025-08-03
 ### Added
 - Smart deploy pipeline V7: arg parser, verify, deployments.json/log, .env sync, debug logging

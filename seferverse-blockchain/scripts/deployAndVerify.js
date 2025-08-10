@@ -96,7 +96,8 @@ async function deployAndVerify(contractName) {
 
   const address = await contract.getAddress();
   const receipt = await hre.ethers.provider.getTransactionReceipt(tx.hash);
-  const gasUsed = receipt.gasUsed * tx.gasPrice;
+  const gasPrice = (receipt.effectiveGasPrice ?? tx.gasPrice ?? 0n);
+  const gasUsed = receipt.gasUsed * gasPrice;
 
   console.log(`✅ ${contractName} deployed at: ${address}`);
   console.log(`💰 Gas Used: ${receipt.gasUsed} (~${hre.ethers.formatEther(gasUsed)} ETH)`);
@@ -117,6 +118,19 @@ async function deployAndVerify(contractName) {
   updateEnvAddress(addrEnvKey, address);
   updateDeploymentsJson(contractName, network, address, tx.hash, args, gasUsed);
   appendTextLog(contractName, network, address, tx.hash, gasUsed);
+
+  // 🔹 Özet: Ağa göre son dağıtımlar
+  try {
+    const registry = JSON.parse(fs.readFileSync(DEPLOYMENTS_JSON, "utf8"));
+    const networkMap = registry[network] || {};
+    console.log(`\n===== DEPLOY SUMMARY @ ${network} =====`);
+    for (const [name, meta] of Object.entries(networkMap)) {
+      console.log(`${name}: ${meta.address} (tx: ${meta.txHash || meta.transactionHash || "-"})`);
+    }
+    console.log("====================================\n");
+  } catch (e) {
+    console.warn("⚠️ Summary print failed:", e.message);
+  }
 
   return address;
 }

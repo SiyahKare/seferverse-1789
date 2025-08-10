@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend:
+    name: Backend (FastAPI) Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: seferverse-dapp/backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('seferverse-dapp/backend/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -q
+
+  frontend:
+    name: Frontend (Next.js) Lint & Tests & Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: seferverse-dapp/frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: seferverse-dapp/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Build
+        env:
+          NEXT_PUBLIC_EXPLORER_BASE: https://sepolia.basescan.org
+          NEXT_PUBLIC_BACKEND_URL: http://localhost:8000
+          NEXT_PUBLIC_STREAM_TOKEN: ci-token-example
+        run: npm run build
+
+      - name: Docker build (frontend)
+        run: |
+          docker build \
+            --build-arg NEXT_PUBLIC_BACKEND_URL=http://localhost:8000 \
+            --build-arg NEXT_PUBLIC_EXPLORER_BASE=https://sepolia.basescan.org \
+            -f seferverse-dapp/frontend/Dockerfile \
+            seferverse-dapp/frontend
+
+  hardhat:
+    name: Blockchain (Hardhat) Compile
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: seferverse-blockchain
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: seferverse-blockchain/package-lock.json
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+
+      - name: Compile
+        run: npx hardhat compile
+
+

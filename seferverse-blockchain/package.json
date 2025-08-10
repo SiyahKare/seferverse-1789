@@ -4,7 +4,13 @@
   "description": "",
   "main": "hardhat.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "hardhat compile",
+    "deploy": "node scripts/deployAndVerify.js",
+    "deploy:dao": "SEFERVERSE_CONTRACT_NAME=SeferVerseDAO node scripts/deployAndVerify.js",
+    "deploy:sv": "SEFERVERSE_CONTRACT_NAME=SeferVerse node scripts/deployAndVerify.js",
+    "deploy:my": "SEFERVERSE_CONTRACT_NAME=MyContract node scripts/deployAndVerify.js",
+    "verify": "hardhat verify"
   },
   "keywords": [],
   "author": "",
