@@ -113,6 +113,35 @@ Ortam değişkenleri:
 ---
 
 ## 🔴 SSE (Server-Sent Events) – Canlı Akış
+---
+
+## 🚀 Prod Deploy – EC2 + Cloudflare
+
+1) GitHub Secrets (Repo → Settings → Secrets):
+- `EC2_HOST` (örn. 3.XX.XX.XX)
+- `EC2_USER` (örn. ubuntu)
+- `EC2_SSH_KEY` (EC2 .pem içeriği)
+- `STREAM_TOKEN` (SSE token)
+- `ALLOWED_ORIGINS= https://seferverse1789.siyahkare.com`
+- `NEXT_PUBLIC_EXPLORER_BASE= https://sepolia.basescan.org`
+- (opsiyonel) `DEPLOY_PRIVATE_KEY`, `BASESCAN_API_KEY`
+
+2) Cloudflare:
+- `seferverse1789.siyahkare.com` A kaydı → EC2 Public IP
+- Proxy açık, SSL Full (Strict)
+
+3) EC2’de otomatik deploy:
+- main’e push → `.github/workflows/deploy-ec2.yml` çalışır
+- EC2’ye SSH, repo güncelle, `infra/scripts/deploy.sh`
+- Erişim: `https://seferverse1789.siyahkare.com/`
+
+4) Manuel deploy (opsiyonel):
+```bash
+ssh ubuntu@<EC2_IP>
+git clone https://github.com/<owner>/<repo>.git /opt/seferverse-1789
+cd /opt/seferverse-1789/infra/scripts && ./deploy.sh
+```
+
 
 - Endpoint: `GET /deployments/stream`
 - İçerik: İlk bağlantıda `type=full` snapshot; daha sonra `type=added|updated|removed|noop` event’leri.

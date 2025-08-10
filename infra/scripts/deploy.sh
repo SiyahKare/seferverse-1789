@@ -22,6 +22,13 @@ if ! command -v docker >/dev/null 2>&1; then
   echo "[+] Docker installed. You may need to re-login for group changes to apply."
 fi
 
+# Fix Docker permissions for current session
+echo "[+] Fixing Docker permissions..."
+sudo chmod 666 /var/run/docker.sock
+newgrp docker << EONG
+echo "[+] Docker group activated for current session"
+EONG
+
 cd "$INFRA_DIR"
 
 echo "[+] Using docker compose file: $(pwd)/docker-compose.yml"
