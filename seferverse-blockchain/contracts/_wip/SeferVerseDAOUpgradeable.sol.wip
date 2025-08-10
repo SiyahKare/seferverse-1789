@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/PausableUpgradeable.sol";
+import {IModule} from "./IModule.sol";
+
+contract SeferVerseDAOUpgradeable is
+    Initializable,
+    UUPSUpgradeable,
+    AccessControlUpgradeable,
+    PausableUpgradeable
+{
+    bytes32 public constant GOVERNOR_ROLE      = keccak256("GOVERNOR_ROLE");
+    bytes32 public constant MODULE_ADMIN_ROLE  = keccak256("MODULE_ADMIN_ROLE");
+    bytes32 public constant PAUSER_ROLE        = keccak256("PAUSER_ROLE");
+    bytes32 public constant UPGRADER_ROLE      = keccak256("UPGRADER_ROLE");
+
+    string private _name;
+    mapping(bytes32 => address) private _modules;
+
+    event NameChanged(string indexed oldName, string indexed newName);
+    event ModuleSet(bytes32 indexed key, address indexed implementation);
+    error NotAContract();
+    error ModuleNotCompliant(bytes32 key);
+
+    function KEY_TOKEN()  public pure returns (bytes32) { return keccak256("TOKEN"); }
+    function KEY_NFT()    public pure returns (bytes32) { return keccak256("NFT"); }
+    function KEY_REFUND() public pure returns (bytes32) { return keccak256("REFUND"); }
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() { _disableInitializers(); }
+
+    function initialize(string memory initialName, address admin) public initializer {
+        __AccessControl_init();
+        __Pausable_init();
+        __UUPSUpgradeable_init();
+
+        _name = initialName;
+
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
+        _grantRole(MODULE_ADMIN_ROLE, admin);
+        _grantRole(PAUSER_ROLE, admin);
+        _grantRole(UPGRADER_ROLE, admin);
+
+        emit NameChanged("", initialName);
+    }
+
+    function name() external view returns (string memory) { return _name; }
+
+    function setName(string calldata newName) external onlyRole(GOVERNOR_ROLE) {
+        string memory old = _name;
+        _name = newName;
+        emit NameChanged(old, newName);
+    }
+
+    function setModule(bytes32 key, address implementation) external onlyRole(MODULE_ADMIN_ROLE) {
+        if (implementation.code.length == 0) revert NotAContract();
+        try IModule(implementation).moduleId() returns (bytes32) {} catch { revert ModuleNotCompliant(key); }
+        _modules[key] = implementation;
+        emit ModuleSet(key, implementation);
+    }
+
+    function getModule(bytes32 key) external view returns (address) { return _modules[key]; }
+
+    function pause() external onlyRole(PAUSER_ROLE) { _pause(); }
+    function unpause() external onlyRole(PAUSER_ROLE) { _unpause(); }
+
+    function _authorizeUpgrade(address) internal override onlyRole(UPGRADER_ROLE) {}
+
+    function supportsInterface(bytes4 id)
+        public view override(AccessControlUpgradeable)
+        returns (bool)
+    { return super.supportsInterface(id); }
+
+    uint256[45] private __gap;
+}

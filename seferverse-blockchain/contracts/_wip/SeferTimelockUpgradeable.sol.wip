@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {TimelockControllerUpgradeable} from "@openzeppelin/contracts-upgradeable/governance/TimelockControllerUpgradeable.sol";
+
+contract SeferTimelockUpgradeable is Initializable, TimelockControllerUpgradeable {
+    constructor() { _disableInitializers(); }
+
+    function initialize(
+        uint256 minDelay,
+        address[] memory proposers,
+        address[] memory executors,
+        address admin
+    ) public override(TimelockControllerUpgradeable) initializer {
+        __TimelockController_init(minDelay, proposers, executors, admin);
+    }
+}
