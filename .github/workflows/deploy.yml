@@ -52,7 +52,7 @@ jobs:
             echo "[+] Deploying Seferverse infra"
             cd /opt/seferverse-1789/infra
             docker compose pull || true
-            docker compose up -d
+            docker compose up -d --build
             docker compose ps
 
             echo "[i] Traefik network membership (infra/*)"
