@@ -1,0 +1,10 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "Checkpoints",
+  "sourceName": "@openzeppelin/contracts/utils/Checkpoints.sol",
+  "abi": [],
+  "bytecode": "0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122039b7ab8418d2d3794dac45082a93ad6ec0aef7991ac766da77decdb1d6de2cbc64736f6c63430008180033",
+  "deployedBytecode": "0x600080fdfea264697066735822122039b7ab8418d2d3794dac45082a93ad6ec0aef7991ac766da77decdb1d6de2cbc64736f6c63430008180033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

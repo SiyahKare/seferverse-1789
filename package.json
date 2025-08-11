@@ -1,11 +1,27 @@
 {
   "name": "seferverse-1789",
   "version": "1.0.0",
+  "private": true,
   "description": "> **Web3 + NFT + Token + Müzik + Tribe = Global Kültür Devrimi**   > Rugcılardan tahsilat, hayallerin refund'u ve kültürel adalet!",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bootstrap": "npm run -w seferverse-dapp/frontend install || true",
+    "compile": "npm run -w seferverse-blockchain compile",
+    "test:blockchain": "npm run -w seferverse-blockchain test || echo \"No Hardhat tests\"",
+    "test:backend": "cd seferverse-dapp/backend && ( [ -d .venv ] || python3 -m venv .venv ) && . .venv/bin/activate && pip -q install -r requirements.txt && pytest -q",
+    "test:frontend": "npm run -w seferverse-dapp/frontend test",
+    "test": "npm run test:blockchain && npm run test:backend && npm run test:frontend",
+    "build:frontend": "npm run -w seferverse-dapp/frontend build",
+    "up": "make up",
+    "down": "make down",
+    "ps": "make ps",
+    "lint": "echo \"(optional) add eslint/ruff here\""
   },
+  "workspaces": [
+    "seferverse-blockchain",
+    "seferverse-dapp/frontend"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SiyahKare/seferverse-1789.git"
@@ -13,7 +29,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/SiyahKare/seferverse-1789/issues"
   },

@@ -1,84 +1,9 @@
 import { useEffect, useState } from "react";
-import { Copy, ExternalLink } from "lucide-react";
 import type { GetServerSideProps } from "next";
-// import DeploymentTable from "../components/DeploymentTable";
-
 import { fetchDeployments, Deployment, hashDeployments, connectDeploymentsSSE } from "../lib/api";
-import { formatDate, formatGas, getExplorerTxUrl } from "../utils/format";
-
-type DeploymentCardProps = {
-  deployment: Deployment;
-};
-
-function DeploymentCard({ deployment }: DeploymentCardProps) {
-  const [copied, setCopied] = useState<string | null>(null);
-  const { name, network, date, address, txHash, gasUsed } = deployment;
-  const explorerUrl = txHash ? getExplorerTxUrl(network, txHash) : "#";
-
-  const handleCopy = async (value: string | undefined, label: string) => {
-    if (!value) return;
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied(label);
-      setTimeout(() => setCopied(null), 1200);
-    } catch {}
-  };
-
-  return (
-    <div
-      className="relative w-full min-h-[220px] rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 shadow-xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02] backdrop-blur-md overflow-hidden group hover:shadow-cyan-900/20 hover:shadow-2xl hover:border-slate-600/50"
-    >
-      <div className="absolute inset-0 rounded-2xl pointer-events-none bg-gradient-to-br from-cyan-500/[0.05] via-transparent to-pink-500/[0.05]" />
-      <div className="flex items-center gap-3 mb-3 relative z-10">
-        <span className="text-lg font-semibold text-white tracking-tight group-hover:text-cyan-50 transition-colors">{name}</span>
-        <span className="ml-auto text-xs text-emerald-200 bg-emerald-900/30 rounded-md px-2.5 py-1 shadow-sm font-mono border border-emerald-700/30">{network}</span>
-      </div>
-      <div className="flex items-center gap-2.5 relative z-10">
-        <span className="text-xs font-medium bg-slate-700/50 text-slate-200 rounded-md px-2.5 py-1 border border-slate-600/30">Tarih</span>
-        <span className="text-sm text-slate-300 font-mono">{formatDate(date)}</span>
-      </div>
-      <div className="flex items-center gap-2.5 relative z-10">
-        <span className="text-xs font-medium bg-slate-700/50 text-slate-200 rounded-md px-2.5 py-1 border border-slate-600/30">Adres</span>
-        <span className="text-sm text-slate-300 flex-1 truncate max-w-[120px] sm:max-w-[180px] md:max-w-[240px] lg:max-w-[320px] font-mono">{address}</span>
-        <button
-          className="p-1.5 text-slate-400 hover:text-cyan-300 hover:bg-slate-700/50 rounded-md transition-all"
-          title="Kopyala"
-          onClick={() => handleCopy(address ?? undefined, 'address')}
-        >
-          <Copy size={14} />
-        </button>
-        {copied === 'address' && <span className="text-xs text-green-400 ml-1">Kopyalandı!</span>}
-      </div>
-      <div className="flex items-center gap-2.5 relative z-10">
-        <span className="text-xs font-medium bg-slate-700/50 text-slate-200 rounded-md px-2.5 py-1 border border-slate-600/30">Tx Hash</span>
-        <span className="text-sm text-slate-300 flex-1 truncate max-w-[120px] sm:max-w-[180px] md:max-w-[240px] lg:max-w-[320px] font-mono">{txHash}</span>
-        <button
-          className="p-1.5 text-slate-400 hover:text-cyan-300 hover:bg-slate-700/50 rounded-md transition-all"
-          title="Kopyala"
-          onClick={() => handleCopy(txHash ?? undefined, 'txHash')}
-        >
-          <Copy size={14} />
-        </button>
-        <a
-          href={explorerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-1.5 text-slate-400 hover:text-cyan-300 hover:bg-slate-700/50 rounded-md transition-all flex items-center"
-          title="Explorer'da Gör"
-        >
-          <ExternalLink size={14} />
-        </a>
-        {copied === 'txHash' && <span className="text-xs text-green-400 ml-1">Kopyalandı!</span>}
-      </div>
-      <div className="flex items-center gap-2.5 mt-4 relative z-10">
-        <span className="text-xs font-medium bg-slate-700/50 text-slate-200 rounded-md px-2.5 py-1 border border-slate-600/30">Gas Used</span>
-        <span className="inline-block px-3 py-1 rounded-md bg-gradient-to-r from-slate-800 to-slate-700 text-slate-200 text-sm font-mono border border-slate-600/30 shadow-sm">
-          {formatGas(gasUsed)}
-        </span>
-      </div>
-    </div>
-  );
-}
+import { formatDate, formatGas } from "../utils/format";
+import DeploymentCard from "../components/DeploymentCard";
+import StatusBadge from "../components/StatusBadge";
 
 interface HomeProps {
   deployments: Deployment[];
@@ -143,28 +68,35 @@ export default function Home({ deployments }: HomeProps) {
   }, []);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center py-12 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="w-full max-w-6xl mx-auto rounded-3xl bg-slate-900/50 backdrop-blur-2xl border border-slate-700/30 shadow-2xl p-8">
-        <h1 className="text-4xl font-bold text-center text-white mb-12 tracking-tight">
-          SeferVerse 1789 Deployments
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div>
+      <div className="mb-8 flex items-center gap-3">
+        <h1 className="text-3xl font-semibold tracking-tight">Deployments</h1>
+        <span className="ml-auto"><StatusBadge online={online} /></span>
+      </div>
+      <div className="rounded-2xl bg-slate-900/60 border border-slate-800 p-6 shadow-xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((d, i) => (
-            <DeploymentCard key={`${d.address ?? ''}-${d.txHash ?? ''}-${i}`} deployment={d} />
+            <DeploymentCard
+              key={`${d.address ?? ''}-${d.txHash ?? ''}-${i}`}
+              name={d.name}
+              date={formatDate(d.date)}
+              address={d.address}
+              txHash={d.txHash}
+              gasUsed={formatGas(d.gasUsed)}
+              network={d.network}
+            />
           ))}
         </div>
-        <div className="mt-6 text-center text-xs text-slate-400">
-          Data signature: {hash}
-        </div>
-        {loading && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-            <div className="i-svg-spinners:90-ring-with-bg w-12 h-12 text-cyan-400 animate-spin" />
-          </div>
-        )}
-        {!online && (
-          <div className="mt-4 text-center text-xs text-amber-300">Canlı bağlantı kesildi, yeniden bağlanılıyor...</div>
-        )}
+        <div className="mt-6 text-right text-xs text-slate-400">Data signature: {hash}</div>
       </div>
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="i-svg-spinners:90-ring-with-bg w-12 h-12 text-cyan-400 animate-spin" />
+        </div>
+      )}
+      {!online && (
+        <div className="mt-4 text-sm text-amber-300">Canlı bağlantı kesildi, yeniden bağlanılıyor...</div>
+      )}
     </div>
   );
 }

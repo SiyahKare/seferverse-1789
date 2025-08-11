@@ -10,6 +10,9 @@
     "deploy:dao": "SEFERVERSE_CONTRACT_NAME=SeferVerseDAO node scripts/deployAndVerify.js",
     "deploy:sv": "SEFERVERSE_CONTRACT_NAME=SeferVerse node scripts/deployAndVerify.js",
     "deploy:my": "SEFERVERSE_CONTRACT_NAME=MyContract node scripts/deployAndVerify.js",
+    "deploy:all": "hardhat run scripts/deploy_all.js --network localhost",
+    "deploy:gov": "hardhat run scripts/deploy_governance.js --network localhost",
+    "abi:export": "mkdir -p abis && cp artifacts/contracts/**/Sefer*Upgradeable.sol/*.json abis/ || true",
     "verify": "hardhat verify"
   },
   "keywords": [],
@@ -18,6 +21,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@openzeppelin/contracts": "^4.9.6",
+    "@openzeppelin/contracts-upgradeable": "^4.9.6",
+    "@openzeppelin/hardhat-upgrades": "^3.9.1",
     "dotenv": "^17.2.1",
     "hardhat": "^2.26.1"
   }

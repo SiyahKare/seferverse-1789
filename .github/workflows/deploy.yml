@@ -1,0 +1,70 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: {}
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload repository to EC2 (sync to /opt/seferverse-1789)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          source: "."
+          target: "/opt/seferverse-1789"
+          overwrite: true
+
+      - name: Deploy on EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_PORT }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+
+            echo "[+] Ensure traefik network exists"
+            docker network inspect traefik_proxy >/dev/null 2>&1 || docker network create traefik_proxy
+
+            if [ -d /opt/traefik ]; then
+              echo "[+] Starting Traefik stack"
+              cd /opt/traefik
+              docker compose up -d
+            else
+              echo "[i] /opt/traefik bulunamadı, Traefik adımı atlanıyor"
+            fi
+
+            echo "[+] Deploying Seferverse infra"
+            cd /opt/seferverse-1789/infra
+            docker compose pull || true
+            docker compose up -d
+            docker compose ps
+
+            echo "[i] Traefik network membership (infra/*)"
+            docker network inspect traefik_proxy | grep -i -E 'sefer|infra' -B1 -A3 || true
+
+            echo "[i] Traefik router logs (recent)"
+            docker logs traefik 2>&1 | grep -i -E 'sefer|infra|Configured' | tail -n 120 || true
+
+            echo "[i] Health checks"
+            curl -sI https://seferverse1789.siyahkare.com || true
+            curl -sI https://api.seferverse1789.siyahkare.com || true
+
+            echo "[✓] Deploy completed"
+
+

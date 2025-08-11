@@ -1,10 +1,11 @@
 import '../styles/globals.css';
 import type { AppProps } from "next/app";
+import Layout from "../components/Layout";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className="min-h-screen bg-slate-900 text-slate-100 antialiased">
+    <Layout>
       <Component {...pageProps} />
-    </main>
+    </Layout>
   );
 }
