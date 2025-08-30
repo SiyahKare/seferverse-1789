@@ -1,6 +1,7 @@
 // hardhat.config.js
 require("@nomicfoundation/hardhat-toolbox");
 require("@openzeppelin/hardhat-upgrades");
+try { require("hardhat-gas-reporter"); } catch (e) { /* optional */ }
 require("dotenv").config();
 
 const {
@@ -67,4 +68,10 @@ module.exports = {
   },
   sourcify: { enabled: false },
   mocha: { timeout: 120000 },
+  gasReporter: {
+    enabled: true,
+    currency: "USD",
+    coinmarketcap: process.env.CMC_API_KEY || undefined,
+    excludeContracts: [],
+  },
 };

@@ -4,7 +4,7 @@
   "description": "",
   "main": "hardhat.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "hardhat test",
     "compile": "hardhat compile",
     "deploy": "node scripts/deployAndVerify.js",
     "deploy:dao": "SEFERVERSE_CONTRACT_NAME=SeferVerseDAO node scripts/deployAndVerify.js",
@@ -12,7 +12,7 @@
     "deploy:my": "SEFERVERSE_CONTRACT_NAME=MyContract node scripts/deployAndVerify.js",
     "deploy:all": "hardhat run scripts/deploy_all.js --network localhost",
     "deploy:gov": "hardhat run scripts/deploy_governance.js --network localhost",
-    "abi:export": "mkdir -p abis && cp artifacts/contracts/**/Sefer*Upgradeable.sol/*.json abis/ || true",
+    "abi:export": "mkdir -p abis && cp artifacts/contracts/SeferVerseDAO.sol/SeferVerseDAO.json abis/ && cp artifacts/contracts/governance/SeferGovernor.sol/SeferGovernor.json abis/ && cp artifacts/contracts/governance/SeferTimelock.sol/SeferTimelock.json abis/ && cp artifacts/contracts/refund/RefundManager.sol/RefundManager.json abis/ && cp artifacts/contracts/refund/RefundVaultEIP712.sol/RefundVaultEIP712.json abis/ || true",
     "verify": "hardhat verify"
   },
   "keywords": [],
@@ -24,6 +24,7 @@
     "@openzeppelin/contracts": "^4.9.6",
     "@openzeppelin/contracts-upgradeable": "^4.9.6",
     "@openzeppelin/hardhat-upgrades": "^3.9.1",
+    "hardhat-gas-reporter": "^1.0.10",
     "dotenv": "^17.2.1",
     "hardhat": "^2.26.1"
   }

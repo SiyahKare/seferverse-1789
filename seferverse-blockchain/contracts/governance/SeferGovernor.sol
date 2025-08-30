@@ -21,7 +21,7 @@ contract SeferGovernor is
 {
     constructor(IVotes _token, TimelockController _timelock)
         Governor("SeferGovernor")
-        GovernorSettings( /* votingDelay */ 1, /* votingPeriod */ 45818, /* proposalThreshold */ 0)
+        GovernorSettings( /* votingDelay */ 1, /* votingPeriod */ 10, /* proposalThreshold */ 0)
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4) // %4 quorum örnek
         GovernorTimelockControl(_timelock)

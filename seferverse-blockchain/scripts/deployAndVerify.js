@@ -117,6 +117,24 @@ async function deployAndVerify(contractName) {
   // 🔹 Env, JSON ve Text log update
   updateEnvAddress(addrEnvKey, address);
   updateDeploymentsJson(contractName, network, address, tx.hash, args, gasUsed);
+  try {
+    // export core ABIs for apps
+    const path = require('path');
+    const fs = require('fs');
+    const root = process.cwd();
+    const abiOut = path.join(root, 'abis');
+    if (!fs.existsSync(abiOut)) fs.mkdirSync(abiOut);
+    const map = {
+      SeferVerseDAO: 'contracts/SeferVerseDAO.sol/SeferVerseDAO.json',
+      SeferGovernor: 'contracts/governance/SeferGovernor.sol/SeferGovernor.json',
+      SeferTimelock: 'contracts/governance/SeferTimelock.sol/SeferTimelock.json',
+    };
+    const rel = map[contractName];
+    if (rel) {
+      const src = path.join(root, 'artifacts', rel);
+      if (fs.existsSync(src)) fs.copyFileSync(src, path.join(abiOut, path.basename(src)));
+    }
+  } catch {}
   appendTextLog(contractName, network, address, tx.hash, gasUsed);
 
   // 🔹 Özet: Ağa göre son dağıtımlar

@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { getExplorerTxUrl, getExplorerAddressUrl } from "../utils/format";
+import { getExplorerTxUrl, getExplorerAddressUrl } from "../src/utils/format";
 
 describe("explorer url helpers", () => {
   test("uses override base when provided (tx)", () => {

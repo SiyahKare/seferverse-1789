@@ -1,0 +1,23 @@
+name: Slither
+on: [push, pull_request]
+jobs:
+  slither:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+      - name: Install deps
+        working-directory: seferverse-blockchain
+        run: |
+          npm ci --no-audit --no-fund || npm install --no-audit --no-fund
+      - name: Run slither
+        uses: crytic/slither-action@v0.3.0
+        with:
+          target: seferverse-blockchain
+          slither-args: --solc-remaps @openzeppelin=node_modules/@openzeppelin
+
+
+

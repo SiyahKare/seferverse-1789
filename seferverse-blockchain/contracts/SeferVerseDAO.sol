@@ -1,35 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/// @title SeferVerse DAO v1
-/// @notice İlk sürüm, sadece name & owner ile başlıyor. İleride token, NFT ve DAO modülleri eklenecek.
+/// @title SeferVerse DAO v1 (Governor/Timelock kontrollü)
+/// @notice Timelock tarafından yürütülen yönetişim teklifleri ile yönetilir.
 contract SeferVerseDAO {
     string public name;
-    address public owner;
+    address public immutable timelock; // GovernorTimelockControl üzerinden yürütücü
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event NameChanged(string oldName, string newName);
 
-    constructor(string memory _name) {
+    constructor(string memory _name, address _timelock) {
+        require(_timelock != address(0), "timelock=0");
         name = _name;
-        owner = msg.sender;
+        timelock = _timelock;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not owner");
+    modifier onlyTimelock() {
+        require(msg.sender == timelock, "Not timelock");
         _;
     }
 
-    /// @notice DAO adını güncelle
-    function setName(string calldata _name) external onlyOwner {
+    /// @notice DAO adını güncelle (sadece Timelock çağırabilir)
+    function setName(string calldata _name) external onlyTimelock {
         emit NameChanged(name, _name);
         name = _name;
-    }
-
-    /// @notice Owner değiştirme (ileride multi-sig eklenebilir)
-    function transferOwnership(address newOwner) external onlyOwner {
-        require(newOwner != address(0), "Zero addr");
-        emit OwnershipTransferred(owner, newOwner);
-        owner = newOwner;
     }
 }

@@ -1,7 +1,8 @@
 // seferverse-blockchain/scripts/services/GovernorService.js
 const { ethers } = require("ethers");
-const daoAbi = require("../abis/SeferVerseDAOUpgradeable.json");
-const governorAbi = require("../abis/SeferGovernorUpgradeable.json");
+// Non-upgradeable ABIs from Hardhat artifacts
+const daoAbi = require("../../artifacts/contracts/SeferVerseDAO.sol/SeferVerseDAO.json");
+const governorAbi = require("../../artifacts/contracts/governance/SeferGovernor.sol/SeferGovernor.json");
 
 class GovernorService {
   constructor(rpcUrl, privateKey, daoAddr, govAddr) {
