@@ -27,9 +27,53 @@ async def get_deployments():
             deployments = json.load(f)
             return deployments
     except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="deployments.json not found")
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="Invalid JSON in deployments file")
+        log(f"❌ deployments.json not found at: {DEPLOYMENTS_PATH}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"deployments.json not found at {DEPLOYMENTS_PATH}"
+        )
+    except json.JSONDecodeError as e:
+        log(f"❌ Invalid JSON in deployments file: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Invalid JSON in deployments file: {str(e)}"
+        )
+    except Exception as e:
+        log(f"❌ Unexpected error reading deployments: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Unexpected error: {str(e)}"
+        )
+
+@router.get("/deployments/stats")
+async def get_deployments_stats():
+    """Get deployment statistics and summary."""
+    log("GET /deployments/stats")
+    try:
+        with open(DEPLOYMENTS_PATH, 'r') as f:
+            deployments = json.load(f)
+
+        # Calculate stats
+        total_contracts = 0
+        networks = list(deployments.keys())
+        contract_types = {}
+
+        for network, contracts in deployments.items():
+            total_contracts += len(contracts)
+            for contract_name in contracts.keys():
+                contract_type = contract_name.split('.')[-1] if '.' in contract_name else 'Unknown'
+                contract_types[contract_type] = contract_types.get(contract_type, 0) + 1
+
+        return {
+            "total_contracts": total_contracts,
+            "networks": networks,
+            "contract_types": contract_types,
+            "last_updated": os.path.getmtime(DEPLOYMENTS_PATH) if os.path.exists(DEPLOYMENTS_PATH) else None
+        }
+    except Exception as e:
+        log(f"❌ Error getting deployment stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 def _parse_allowed_origins() -> Optional[List[str]]:
     raw = os.getenv("ALLOWED_ORIGINS", "").strip()
