@@ -1,5 +1,6 @@
 import { useContractRead, useContractWrite, usePrepareContractWrite, useWaitForTransaction, useAccount } from 'wagmi'
 import { parseEther, formatEther } from 'viem'
+import { useContractAddresses } from './useContractAddresses'
 
 // Contract ABIs
 const SEFER_VERSE_DAO_ABI = [
@@ -80,24 +81,23 @@ const BARON_NFT_ABI = [
   }
 ] as const
 
-// Contract addresses (deployments.json'dan alınacak)
-const CONTRACT_ADDRESSES = {
-  seferVerseDAO: process.env.NEXT_PUBLIC_SEFER_VERSE_DAO_ADDRESS || '0x0000000000000000000000000000000000000000',
-  baronToken: process.env.NEXT_PUBLIC_BARON_TOKEN_ADDRESS || '0x0000000000000000000000000000000000000000',
-  baronNFT: process.env.NEXT_PUBLIC_BARON_NFT_ADDRESS || '0x0000000000000000000000000000000000000000'
-}
+// Contract addresses will be loaded dynamically from deployments.json
 
 export function useSeferVerseDAO() {
+  const { addresses } = useContractAddresses()
+  
   const { data: daoName, isLoading: isLoadingName } = useContractRead({
-    address: CONTRACT_ADDRESSES.seferVerseDAO as `0x${string}`,
+    address: addresses.seferVerseDAO as `0x${string}`,
     abi: SEFER_VERSE_DAO_ABI,
     functionName: 'name',
+    enabled: !!addresses.seferVerseDAO,
   })
 
   const { config: setNameConfig } = usePrepareContractWrite({
-    address: CONTRACT_ADDRESSES.seferVerseDAO as `0x${string}`,
+    address: addresses.seferVerseDAO as `0x${string}`,
     abi: SEFER_VERSE_DAO_ABI,
     functionName: 'setName',
+    enabled: !!addresses.seferVerseDAO,
   })
 
   const { data: setNameData, write: setName } = useContractWrite(setNameConfig)
@@ -116,24 +116,26 @@ export function useSeferVerseDAO() {
 }
 
 export function useBaronToken() {
+  const { address } = useAccount()
+  const { addresses } = useContractAddresses()
+  
   const { data: totalSupply, isLoading: isLoadingSupply } = useContractRead({
-    address: CONTRACT_ADDRESSES.baronToken as `0x${string}`,
+    address: addresses.baronToken as `0x${string}`,
     abi: BARON_TOKEN_ABI,
     functionName: 'totalSupply',
+    enabled: !!addresses.baronToken,
   })
 
-  const { address } = useAccount()
-  
   const { data: balance, isLoading: isLoadingBalance } = useContractRead({
-    address: CONTRACT_ADDRESSES.baronToken as `0x${string}`,
+    address: addresses.baronToken as `0x${string}`,
     abi: BARON_TOKEN_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    enabled: !!address,
+    enabled: !!address && !!addresses.baronToken,
   })
 
   const { config: transferConfig } = usePrepareContractWrite({
-    address: CONTRACT_ADDRESSES.baronToken as `0x${string}`,
+    address: addresses.baronToken as `0x${string}`,
     abi: BARON_TOKEN_ABI,
     functionName: 'transfer',
     enabled: false, // Manuel olarak etkinleştirilecek
@@ -158,23 +160,25 @@ export function useBaronToken() {
 
 export function useBaronNFT() {
   const { address } = useAccount()
+  const { addresses } = useContractAddresses()
   
   const { data: totalSupply, isLoading: isLoadingSupply } = useContractRead({
-    address: CONTRACT_ADDRESSES.baronNFT as `0x${string}`,
+    address: addresses.baronNFT as `0x${string}`,
     abi: BARON_NFT_ABI,
     functionName: 'totalSupply',
+    enabled: !!addresses.baronNFT,
   })
 
   const { data: nftBalance, isLoading: isLoadingBalance } = useContractRead({
-    address: CONTRACT_ADDRESSES.baronNFT as `0x${string}`,
+    address: addresses.baronNFT as `0x${string}`,
     abi: BARON_NFT_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    enabled: !!address,
+    enabled: !!address && !!addresses.baronNFT,
   })
 
   const { config: mintConfig } = usePrepareContractWrite({
-    address: CONTRACT_ADDRESSES.baronNFT as `0x${string}`,
+    address: addresses.baronNFT as `0x${string}`,
     abi: BARON_NFT_ABI,
     functionName: 'mint',
     enabled: false, // Manuel olarak etkinleştirilecek
@@ -197,6 +201,4 @@ export function useBaronNFT() {
   }
 }
 
-export function useContractAddresses() {
-  return CONTRACT_ADDRESSES
-}
+// useContractAddresses hook is now in a separate file

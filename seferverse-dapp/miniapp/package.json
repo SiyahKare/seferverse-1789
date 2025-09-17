@@ -1,0 +1,24 @@
+{
+  "name": "seferverse-telegram-miniapp",
+  "version": "1.0.0",
+  "description": "SeferVerse 1789 Telegram MiniApp",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "15.4.6",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "lucide-react": "^0.536.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}

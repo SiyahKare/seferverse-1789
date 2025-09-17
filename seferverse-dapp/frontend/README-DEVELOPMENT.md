@@ -37,6 +37,9 @@ Frontend: http://localhost:3000 adresinde açılacak
 - **Modern UI**: Glassmorphism tasarım, gradients, animasyonlar
 - **Real-time Updates**: SSE ile canlı veri güncellemeleri
 - **Responsive Design**: Mobil uyumlu tasarım
+- **Analytics Dashboard**: Token ve NFT istatistikleri
+- **Error Handling**: Toast sistemi ve user feedback
+- **Dynamic Contract Loading**: Deployments.json'dan otomatik adres yükleme
 
 ### 📋 Kontrat Fonksiyonları
 - DAO adı okuma/güncelleme
@@ -48,6 +51,8 @@ Frontend: http://localhost:3000 adresinde açılacak
 - `WalletConnect`: Cüzdan bağlantı butonu
 - `ContractInteraction`: DAO ve Token etkileşimleri
 - `NFTMinting`: NFT mint etme arayüzü
+- `AnalyticsDashboard`: Token ve NFT istatistikleri
+- `Toast`: Error handling ve user feedback
 - `DeploymentCard`: Kontrat deployment bilgileri
 
 ## 🛠 Geliştirme Notları
