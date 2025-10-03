@@ -46,3 +46,4 @@ export function useContractAddresses() {
 
   return { addresses, isLoading }
 }
+
