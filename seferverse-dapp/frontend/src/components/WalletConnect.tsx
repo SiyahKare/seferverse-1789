@@ -52,10 +52,14 @@ export default function WalletConnect() {
       <div className="flex items-center gap-4">
         <button
           onClick={connectWallet}
-          className="bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-600 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 flex items-center gap-2"
+          className="bg-black border-2 border-cyan-500 hover:border-magenta-500 text-cyan-400 hover:text-magenta-400 font-bold py-3 px-8 rounded transition-all duration-200 transform hover:scale-105 flex items-center gap-3 font-mono uppercase"
+          style={{
+            boxShadow: '0 0 20px var(--neon-cyan), inset 0 0 20px rgba(0,255,255,0.1)',
+            textShadow: '0 0 10px var(--neon-cyan)'
+          }}
         >
           <Wallet className="w-5 h-5" />
-          Cüzdan Bağla
+          <span>CONNECT_WALLET</span>
         </button>
       </div>
     )
@@ -63,29 +67,31 @@ export default function WalletConnect() {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
-        <Wallet className="w-5 h-5 text-cyan-400" />
-        <span className="text-white font-medium">
-          {address ? shortenAddress(address) : 'Connected'}
+      <div className="flex items-center gap-3 bg-black/90 backdrop-blur-sm rounded px-4 py-2 border-2 border-green-500 font-mono" style={{boxShadow: '0 0 15px var(--neon-green), inset 0 0 15px rgba(0,255,65,0.1)'}}>
+        <Wallet className="w-5 h-5 text-green-400" style={{filter: 'drop-shadow(0 0 5px var(--neon-green))'}} />
+        <span className="text-green-400 font-bold" style={{textShadow: '0 0 10px var(--neon-green)'}}>
+          {address ? shortenAddress(address) : 'CONNECTED'}
         </span>
         <button
           onClick={copyAddress}
-          className="p-1 hover:bg-white/10 rounded transition-colors"
+          className="p-1 hover:bg-green-500/20 rounded transition-colors border border-green-500/50"
           title="Copy address"
+          style={{boxShadow: '0 0 5px rgba(0,255,65,0.3)'}}
         >
           {copied ? (
-            <Check className="w-4 h-4 text-green-400" />
+            <Check className="w-4 h-4 text-green-400" style={{filter: 'drop-shadow(0 0 5px var(--neon-green))'}} />
           ) : (
-            <Copy className="w-4 h-4 text-slate-400" />
+            <Copy className="w-4 h-4 text-green-400/70" />
           )}
         </button>
       </div>
       <button
         onClick={disconnect}
-        className="flex items-center gap-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 px-4 py-2 rounded-xl border border-red-500/30 transition-colors"
+        className="flex items-center gap-2 bg-black border-2 border-red-500 text-red-400 px-4 py-2 rounded hover:bg-red-500/10 transition-colors font-mono font-bold"
+        style={{boxShadow: '0 0 10px rgba(255,0,0,0.5)', textShadow: '0 0 10px rgba(255,0,0,0.8)'}}
       >
         <Wallet className="w-4 h-4" />
-        Disconnect
+        DISCONNECT
       </button>
     </div>
   )

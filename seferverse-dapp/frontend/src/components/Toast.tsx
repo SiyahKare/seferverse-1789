@@ -1,80 +1,113 @@
-import React, { useEffect } from 'react'
-import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
-export type ToastType = 'success' | 'error' | 'warning' | 'info'
+export interface Toast {
+  id: string
+  type: 'success' | 'error' | 'warning' | 'info'
+  message: string
+  description?: string
+}
 
 interface ToastProps {
-  id: string
-  type: ToastType
-  title: string
-  message?: string
-  duration?: number
+  toast: Toast
   onClose: (id: string) => void
 }
 
-const toastIcons = {
-  success: CheckCircle,
-  error: XCircle,
-  warning: AlertCircle,
-  info: Info
-}
-
-const toastColors = {
-  success: 'bg-green-500/20 border-green-500/30 text-green-400',
-  error: 'bg-red-500/20 border-red-500/30 text-red-400',
-  warning: 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400',
-  info: 'bg-blue-500/20 border-blue-500/30 text-blue-400'
-}
-
-export default function Toast({ id, type, title, message, duration = 5000, onClose }: ToastProps) {
-  const Icon = toastIcons[type]
-
+function ToastItem({ toast, onClose }: ToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose(id)
-    }, duration)
-
+      onClose(toast.id)
+    }, 5000)
     return () => clearTimeout(timer)
-  }, [id, duration, onClose])
+  }, [toast.id, onClose])
+
+  const icons = {
+    success: '✅',
+    error: '❌',
+    warning: '⚠️',
+    info: 'ℹ️'
+  }
+
+  const colors = {
+    success: 'border-green-500 bg-green-500/10',
+    error: 'border-red-500 bg-red-500/10',
+    warning: 'border-yellow-500 bg-yellow-500/10',
+    info: 'border-cyan-500 bg-cyan-500/10'
+  }
+
+  const glowColors = {
+    success: '0 0 20px var(--neon-green)',
+    error: '0 0 20px rgba(255,0,0,0.5)',
+    warning: '0 0 20px var(--neon-yellow)',
+    info: '0 0 20px var(--neon-cyan)'
+  }
 
   return (
-    <div className={`${toastColors[type]} backdrop-blur-sm rounded-xl p-4 border shadow-lg max-w-sm w-full transform transition-all duration-300 ease-in-out`}>
+    <div 
+      className={`${colors[toast.type]} animate-slide-in-left mb-3 rounded-lg border-2 p-4 backdrop-blur-xl relative overflow-hidden`}
+      style={{ boxShadow: glowColors[toast.type] }}
+    >
       <div className="flex items-start gap-3">
-        <Icon className="w-5 h-5 flex-shrink-0 mt-0.5" />
+        <span className="text-2xl">{icons[toast.type]}</span>
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-sm">{title}</h4>
-          {message && (
-            <p className="text-xs opacity-90 mt-1">{message}</p>
+          <p className="text-sm font-bold font-mono text-white">{toast.message}</p>
+          {toast.description && (
+            <p className="text-xs text-white/70 mt-1 font-mono">{toast.description}</p>
           )}
         </div>
         <button
-          onClick={() => onClose(id)}
-          className="flex-shrink-0 p-1 hover:bg-white/10 rounded transition-colors"
+          onClick={() => onClose(toast.id)}
+          className="text-white/50 hover:text-white transition-colors"
         >
-          <X className="w-4 h-4" />
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
+      
+      {/* Progress bar */}
+      <div className="absolute bottom-0 left-0 h-1 bg-white/30 animate-shrink" style={{ width: '100%', animation: 'shrink 5s linear' }} />
     </div>
   )
 }
 
-// Toast Container
 interface ToastContainerProps {
-  toasts: Array<ToastProps & { id: string }>
+  toasts: Toast[]
   onClose: (id: string) => void
 }
 
 export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
+  if (toasts.length === 0) return null
+
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
-      {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          {...toast}
-          onClose={onClose}
-        />
+    <div className="fixed top-20 right-4 z-[60] w-full max-w-sm">
+      {toasts.map(toast => (
+        <ToastItem key={toast.id} toast={toast} onClose={onClose} />
       ))}
     </div>
   )
 }
 
+// Global counter for unique toast IDs
+let toastCounter = 0
+
+// Custom hook for toasts
+export function useToast() {
+  const [toasts, setToasts] = useState<Toast[]>([])
+
+  const addToast = (type: Toast['type'], message: string, description?: string) => {
+    // Combine timestamp with counter for truly unique IDs
+    const id = `${Date.now()}-${++toastCounter}`
+    setToasts(prev => [...prev, { id, type, message, description }])
+  }
+
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id))
+  }
+
+  const success = (message: string, description?: string) => addToast('success', message, description)
+  const error = (message: string, description?: string) => addToast('error', message, description)
+  const warning = (message: string, description?: string) => addToast('warning', message, description)
+  const info = (message: string, description?: string) => addToast('info', message, description)
+
+  return { toasts, removeToast, success, error, warning, info }
+}

@@ -14,23 +14,22 @@ export default function App({ Component, pageProps }: AppProps) {
         
         {/* PWA Meta Tags */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#8b5cf6" />
+        <meta name="theme-color" content="#00ffff" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="SeferVerse" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
         
-        {/* Open Graph */}
-        <meta property="og:title" content="SeferVerse 1789 - Baron Devrimi" />
-        <meta property="og:description" content="Web3 + NFT + Token + Müzik + Tribe" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="/icon-512x512.png" />
-        
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="SeferVerse 1789 - Baron Devrimi" />
-        <meta name="twitter:description" content="Web3 + NFT + Token + Müzik + Tribe" />
-        <meta name="twitter:image" content="/icon-512x512.png" />
+      {/* Open Graph */}
+      <meta property="og:title" content="SeferVerse 1789 - Baron Devrimi" />
+      <meta property="og:description" content="Web3 + NFT + Token + Müzik + Tribe" />
+      <meta property="og:type" content="website" />
+
+      {/* Twitter */}
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content="SeferVerse 1789 - Baron Devrimi" />
+      <meta name="twitter:description" content="Web3 + NFT + Token + Müzik + Tribe" />
       </Head>
       <Web3Provider>
         <Component {...pageProps} />
